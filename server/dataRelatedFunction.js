@@ -7,6 +7,24 @@ var dataRelatedFunction = function() {
       text: "initial message",
       roomname: 'lobby',
       createdAt: Date.now()
+    },
+         {
+      username: "Yolo",
+      text: "initial message",
+      roomname: 'lobby',
+      createdAt: Date.now()
+    },
+         {
+      username: "Yolo",
+      text: "initial message",
+      roomname: 'lobby',
+      createdAt: Date.now()
+    },
+         {
+      username: "Yolo",
+      text: "initial message",
+      roomname: 'lobby',
+      createdAt: Date.now()
     }
   ];
   dataObject.data = data;
@@ -14,8 +32,22 @@ var dataRelatedFunction = function() {
   dataObject.add = function(value) {
     data.push(value);
   };
-  dataObject.returnData = function() {
-    return data;
+  dataObject.returnData = function(url) {
+    if(!url){
+      return data;
+    } else {
+      var newData = data.slice();
+      if(url.match(/order=-createdAt/)){
+        newData.sort(function(a,b){
+          return b.createdAt - a.createdAt;
+        });
+      }
+      if(url.match(/limit=/)){
+        var limit = +url[url.match(/limit=/).index+6];
+        newData = newData.slice(0,limit);
+      }
+      return newData;
+    }
   };
 
   return dataObject;

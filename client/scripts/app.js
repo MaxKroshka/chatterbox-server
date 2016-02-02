@@ -59,7 +59,7 @@ var app = {
       url: app.server,
       type: 'GET',
       contentType: 'application/json',
-      data: { order: '-createdAt'},
+      data: { order: '-createdAt', limit: 5},
       success: function(data) {
         console.log(data);
         // Don't bother if we have nothing to work with

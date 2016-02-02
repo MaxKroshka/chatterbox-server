@@ -32,9 +32,14 @@ var requestHandler = function(request, response) {
 
   if(verifyUrl(request.url)){
     if(request.method === 'GET'){
-        console.log('Request was recieved');
-        statusCode = 200;
-        responseResult = JSON.stringify({results: storage.returnData()});
+      var data  = storage.returnData();
+      if(request.url.length > 18){
+         data = storage.returnData(request.url); 
+         console.log(data);
+      }
+      console.log('Request was recieved');
+      statusCode = 200;
+      responseResult = JSON.stringify({results: data});
     }
 
     if(request.method === 'POST'){
