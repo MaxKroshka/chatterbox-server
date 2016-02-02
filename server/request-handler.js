@@ -15,6 +15,7 @@ this file and include it in basic-server.js so that it actually works.
 var exports = module.exports = {};
 var outerOuterStorage = require('./dataRelatedFunction.js');
 var outerStorage = outerOuterStorage.dataRelatedFunction();
+var url = require('url');
 
 var requestHandler = function(request, response) {
  
@@ -25,26 +26,35 @@ var requestHandler = function(request, response) {
 
   headers['Content-Type'] = "application/json";
 
-  if(request.method === 'GET'){
-    console.log('Request was recieved');
-    statusCode = 200;
-    responseResult = JSON.stringify({results: storage.returnData()});
-  }
+  var verifyUrl = function(url){
+    return Boolean(url.match(/classes/));
+  };
 
-  if(request.method === 'POST'){
-    request.on('data', function(chunk){
-      var body = JSON.parse(chunk.toString());
-      body.createdAt = Date.now();
-      storage.add(body);
-    });
-    statusCode = 201;
-    console.log('Message is succesfully posted');  
-  }
+  if(verifyUrl(request.url)){
+    if(request.method === 'GET'){
+        console.log('Request was recieved');
+        statusCode = 200;
+        responseResult = JSON.stringify({results: storage.returnData()});
+    }
 
-  if(request.method === 'OPTIONS'){
-    statusCode = 200;
-  }
+    if(request.method === 'POST'){
+      request.on('data', function(chunk){
+        var body = JSON.parse(chunk.toString());
+        body.createdAt = Date.now();
+        storage.add(body);
+      });
+      statusCode = 201;
+      console.log('Message is succesfully posted');  
+    }
 
+    if(request.method === 'OPTIONS'){
+      statusCode = 200;
+    }
+  } else {
+    statusCode = 404;
+    responseResult = 'Invalid url';
+  }
+  
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   response.writeHead(statusCode, headers);
