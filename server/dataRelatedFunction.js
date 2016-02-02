@@ -4,7 +4,7 @@ var dataRelatedFunction = function() {
   var data = [
      {
       username: "Yolo",
-      text: "asda",
+      text: "initial message",
       roomname: 'lobby',
       createdAt: Date.now()
     }

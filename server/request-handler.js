@@ -33,9 +33,9 @@ var requestHandler = function(request, response) {
 
   if(request.method === 'POST'){
     request.on('data', function(chunk){
-      var body = chunk.toString();
+      var body = JSON.parse(chunk.toString());
       body.createdAt = Date.now();
-      storage.add(JSON.parse(body));
+      storage.add(body);
     });
     statusCode = 201;
     console.log('Message is succesfully posted');  
