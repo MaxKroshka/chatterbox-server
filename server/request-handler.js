@@ -11,25 +11,32 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+
 var exports = module.exports = {};
+var outerOuterStorage = require('./dataRelatedFunction.js');
+var outerStorage = outerOuterStorage.dataRelatedFunction();
+
 var requestHandler = function(request, response) {
  
   var statusCode = 500;
   var responseResult = '{}';
-
+  var storage = outerStorage;
   var headers = defaultCorsHeaders;
-  var storage = dataRelatedFunction();
 
   headers['Content-Type'] = "application/json";
 
   if(request.method === 'GET'){
     console.log('Request was recieved');
     statusCode = 200;
-    responseResult = JSON.stringify({results: storage.data});
+    responseResult = JSON.stringify({results: storage.returnData()});
   }
 
   if(request.method === 'POST'){
-    storage.add(request._postData);
+    request.on('data', function(chunk){
+      var body = chunk.toString();
+      body.createdAt = Date.now();
+      storage.add(JSON.parse(body));
+    });
     statusCode = 201;
     console.log('Message is succesfully posted');  
   }
@@ -64,21 +71,3 @@ exports.requestHandler = requestHandler;
 
 // sneaky way to go around node's "unable to push stuff" restriction
 // returns an object  
-var dataRelatedFunction = function() {
-  var dataObject = {};
-  var data = [
-     {
-      username: "Yolo",
-      text: "asda",
-      roomname: 'lobby',
-      createdAt: Date.now()
-    }
-  ];
-  dataObject.data = data;
-
-  dataObject.add = function(value) {
-    data.push(value);
-  };
-
-  return dataObject;
-};
