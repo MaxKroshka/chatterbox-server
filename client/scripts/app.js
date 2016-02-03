@@ -3,7 +3,7 @@ var app = {
 
   //TODO: The current 'addFriend' function just adds the class 'friend'
   //to all messages sent by the user
-  server: 'http://127.0.0.1:3000/classes/messages',
+  server: 'http://127.0.0.1:3000/classes/chatterbox',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -61,16 +61,14 @@ var app = {
       contentType: 'application/json',
       data: { order: '-createdAt', limit: 5},
       success: function(data) {
-        console.log(data);
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
-
+        console.log(data);
         // Get the last message
         var mostRecentMessage = data.results[data.results.length-1];
         var displayedRoom = $('.chat span').first().data('roomname');
         app.stopSpinner();
         // Only bother updating the DOM if we have a new message
-        // if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
           // Update the UI with the fetched rooms
           app.populateRooms(data.results);
 
