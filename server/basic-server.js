@@ -17,51 +17,37 @@ var port = 3000;
 var ip = "127.0.0.1";
 
 
-
+var handleFileRequest = function(path,contType){
+  fs.readFile(__dirname+"/.."+path, function(err, data){
+      response.writeHead(200, {'Content-Type': contType});
+      response.write(data);
+      response.end();
+    });
+};
 // We use node's http module to create a server.
 //
 // The function we pass to http.createServer will be used to handle all
 // incoming requests.
 //
 // After creating the server, we will tell it to listen on the given port and IP. */
-fs.readFile(__dirname+"/index.html", function(err, html){
+fs.readFile(__dirname+"/../client/index.html", function(err, html){
 var server = http.createServer(function(request, response){
   var urlParts = url.parse(request.url);
 
   if(urlParts.pathname === '/'){ 
-    fs.readFile(__dirname+"/index.html", function(err, data){
-      response.writeHead(200, {'Content-Type': 'text/html'});
-      response.write(data);
-      response.end();
-    });
-  }
+    handleFileRequest(urlParts.pathname, 'text/html');
+    }
   else if(urlParts.pathname ===  '/env/config.js') {
-   fs.readFile(__dirname+"/env/config.js", function(err, data){
-      response.writeHead(200, {'Content-Type': 'application/javascript'});
-      response.write(data);
-      response.end();
-    }); 
-  }
+    handleFileRequest(urlParts.pathname, 'application/javascript');
+    }
   else if(urlParts.pathname ===  '/scripts/app.js') {
-   fs.readFile(__dirname+"/scripts/app.js", function(err, data){
-      response.writeHead(200, {'Content-Type': 'application/javascript'});
-      response.write(data);
-      response.end();
-    }); 
+    handleFileRequest(urlParts.pathname, 'application/javascript');
   }
   else if(urlParts.pathname ===  '/styles/styles.css') {
-   fs.readFile(__dirname+"/styles/styles.css", function(err, data){
-      response.writeHead(200, {'Content-Type': 'text/css'});
-      response.write(data);
-      response.end();
-    }); 
+    handleFileRequest(urlParts.pathname, 'text/css'); 
   }
   else if(urlParts.pathname ===  '/images/spiffygif_46x46.gif') {
-   fs.readFile(__dirname+"/images/spiffygif_46x46.gif", function(err, data){
-      response.writeHead(200, {'Content-Type': 'image/gif'});
-      response.write(data);
-      response.end();
-    }); 
+    handleFileRequest(urlParts.pathname, 'image/gif');
   }
   else if(urlParts.pathname === '/classes/chatterbox'){
     handleRequest(request,response);

@@ -11,12 +11,12 @@ var headers = {
 module.exports.operateData = function() {
   var dataObject = {};
   var objectId = 0;
-  var data = JSON.parse(fs.readFileSync('/Users/student/Desktop/2016-01-chatterbox-server/server/messages.json', 'utf8'));
+  var data = JSON.parse(fs.readFileSync(__dirname+'/messages.json', 'utf8'));
   dataObject.add = function(value) {
     value.objectId = ++objectId;
     value.createdAt = Date.now();
     data.push(value);
-    fs.writeFile('/Users/student/Desktop/2016-01-chatterbox-server/server/messages.json', JSON.stringify(data));
+    fs.writeFile(__dirname+'/messages.json', JSON.stringify(data));
   };
   dataObject.returnData = function(passedUrl) {
     if(!passedUrl){
@@ -40,12 +40,7 @@ module.exports.operateData = function() {
   return dataObject;
 };
 
-module.exports.handleResponse = function(response, data, statusCode, contentType){
-  // if(contentType){
-  //   headers['Content-Type'] = contentType;
-  // } else {
-  //   headers['Content-Type'] = "application/json";
-  // }
+module.exports.handleResponse = function(response, data, statusCode){
   statusCode = statusCode || 200;
   response.writeHead(statusCode, headers);
   response.end(JSON.stringify(data));
