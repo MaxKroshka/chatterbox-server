@@ -24,10 +24,46 @@ var ip = "127.0.0.1";
 // incoming requests.
 //
 // After creating the server, we will tell it to listen on the given port and IP. */
+fs.readFile(__dirname+"/index.html", function(err, html){
 var server = http.createServer(function(request, response){
   var urlParts = url.parse(request.url);
 
-  if(urlParts.pathname === '/classes/chatterbox'){
+  if(urlParts.pathname === '/'){ 
+    fs.readFile(__dirname+"/index.html", function(err, data){
+      response.writeHead(200, {'Content-Type': 'text/html'});
+      response.write(data);
+      response.end();
+    });
+  }
+  else if(urlParts.pathname ===  '/env/config.js') {
+   fs.readFile(__dirname+"/env/config.js", function(err, data){
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(data);
+      response.end();
+    }); 
+  }
+  else if(urlParts.pathname ===  '/scripts/app.js') {
+   fs.readFile(__dirname+"/scripts/app.js", function(err, data){
+      response.writeHead(200, {'Content-Type': 'application/javascript'});
+      response.write(data);
+      response.end();
+    }); 
+  }
+  else if(urlParts.pathname ===  '/styles/styles.css') {
+   fs.readFile(__dirname+"/styles/styles.css", function(err, data){
+      response.writeHead(200, {'Content-Type': 'text/css'});
+      response.write(data);
+      response.end();
+    }); 
+  }
+  else if(urlParts.pathname ===  '/images/spiffygif_46x46.gif') {
+   fs.readFile(__dirname+"/images/spiffygif_46x46.gif", function(err, data){
+      response.writeHead(200, {'Content-Type': 'image/gif'});
+      response.write(data);
+      response.end();
+    }); 
+  }
+  else if(urlParts.pathname === '/classes/chatterbox'){
     handleRequest(request,response);
   } else {
     handleResponse(response, 'Not Found', 404);
@@ -35,7 +71,7 @@ var server = http.createServer(function(request, response){
 });
 console.log("Listening on http://" + ip + ":" + port);
 server.listen(port, ip);
-
+});
 // To start this server, run:
 //
 //   node basic-server.js
