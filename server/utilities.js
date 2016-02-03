@@ -23,7 +23,6 @@ module.exports.operateData = function() {
       return data;
     } else {
       var urlQuery = url.parse(passedUrl).query;
-      console.log(urlQuery);
       var newData = data.slice();
       if(urlQuery.match(/order=-createdAt/)){
         newData.sort(function(a,b){
@@ -41,7 +40,12 @@ module.exports.operateData = function() {
   return dataObject;
 };
 
-module.exports.handleResponse = function(response, data, statusCode){
+module.exports.handleResponse = function(response, data, statusCode, contentType){
+  // if(contentType){
+  //   headers['Content-Type'] = contentType;
+  // } else {
+  //   headers['Content-Type'] = "application/json";
+  // }
   statusCode = statusCode || 200;
   response.writeHead(statusCode, headers);
   response.end(JSON.stringify(data));
