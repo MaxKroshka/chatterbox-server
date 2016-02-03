@@ -1,3 +1,5 @@
+var fs = require('fs');
+var url = require('url');
 var headers = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -9,33 +11,27 @@ var headers = {
 module.exports.operateData = function() {
   var dataObject = {};
   var objectId = 0;
-  var data = [
-     {
-      username: "Test",
-      text: "initial message",
-      roomname: 'lobby',
-      createdAt: Date.now(),
-      objectId: 0
-    }
-  ];
-
+  var data = JSON.parse(fs.readFileSync('/Users/student/Desktop/2016-01-chatterbox-server/server/messages.json', 'utf8'));
   dataObject.add = function(value) {
     value.objectId = ++objectId;
     value.createdAt = Date.now();
     data.push(value);
+    fs.writeFile('/Users/student/Desktop/2016-01-chatterbox-server/server/messages.json', JSON.stringify(data));
   };
-  dataObject.returnData = function(url) {
-    if(!url){
+  dataObject.returnData = function(passedUrl) {
+    if(!passedUrl){
       return data;
     } else {
+      var urlQuery = url.parse(passedUrl).query;
+      console.log(urlQuery);
       var newData = data.slice();
-      if(url.match(/order=-createdAt/)){
+      if(urlQuery.match(/order=-createdAt/)){
         newData.sort(function(a,b){
           return b.createdAt - a.createdAt;
         });
       }
-      if(url.match(/limit=/)){
-        var limit = +url[url.match(/limit=/).index+6];
+      if(urlQuery.match(/limit=/)){
+        var limit = +passedUrl.slice(passedUrl.match(/limit=/).index+6);
         newData = newData.slice(0,limit);
       }
       return newData;
